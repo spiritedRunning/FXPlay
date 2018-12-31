@@ -124,18 +124,19 @@ bool XShader::Init(XShaderType type) {
             break;
         default:
             XLOGE("XSHADER format is error");
-            break;
+            return false;
     }
     if (fsh == 0) {
-        XLOGE("InitShader GL_FRAGMENT_SHADER succ");
+        XLOGE("InitShader GL_FRAGMENT_SHADER failed");
+        return false;
     }
     XLOGI("InitShader GL_FRAGMENT_SHADER succ");
 
-
+    ////////////////////////////////////////////////////////////
     // 创建渲染程序
     program = glCreateProgram();
     if (program == 0) {
-        XLOGD("glCreateProgram failed");
+        XLOGE("glCreateProgram failed");
         return false;
     }
     // 渲染程序中加入着色器代码

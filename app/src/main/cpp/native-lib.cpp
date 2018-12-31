@@ -22,25 +22,18 @@ public:
     }
 };
 
+IVideoView *view = NULL;
+
 extern "C" JNIEXPORT
 jint JNI_OnLoad(JavaVM *vm, void *res) {
     FFDecode::InitHard(vm);
-    return JNI_VERSION_1_4;
-}
-
-IVideoView *view = NULL;
-extern "C" JNIEXPORT jstring JNICALL
-Java_com_quanshi_uc_fxplay_MainActivity_stringFromJNI(
-        JNIEnv *env,
-        jobject /* this */) {
-    std::string hello = "Hello from";
 
 
     // 测试代码
-//    TestObs *tobs = new TestObs();
+    TestObs *tobs = new TestObs();
     IDemux *de = new FFDemux();
 //    de->AddObs(tobs);
-    de->Open("/sdcard/VID_181027.mp4");
+    de->Open("/sdcard/iloveyou.mp4");
 
     XLOGI("start video decode");
     IDecode *vdecode = new FFDecode();
@@ -67,6 +60,12 @@ Java_com_quanshi_uc_fxplay_MainActivity_stringFromJNI(
     de->Start();
     vdecode->Start();
     adecode->Start();
+    return JNI_VERSION_1_4;
+}
+
+extern "C" JNIEXPORT jstring JNICALL
+Java_com_quanshi_uc_fxplay_MainActivity_stringFromJNI( JNIEnv *env, jobject /* this */) {
+    std::string hello = "Hello from";
 
 //    XSleep(3000);
 //    de->Stop();
@@ -74,8 +73,6 @@ Java_com_quanshi_uc_fxplay_MainActivity_stringFromJNI(
 //        XData d = de->Read();
 //        XLOGI("Read data size = %d", d.size);
 //    }
-
-
 
     return env->NewStringUTF(hello.c_str());
 }

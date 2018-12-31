@@ -22,6 +22,12 @@ public:
     }
 };
 
+extern "C" JNIEXPORT
+jint JNI_OnLoad(JavaVM *vm, void *res) {
+    FFDecode::InitHard(vm);
+    return JNI_VERSION_1_4;
+}
+
 IVideoView *view = NULL;
 extern "C" JNIEXPORT jstring JNICALL
 Java_com_quanshi_uc_fxplay_MainActivity_stringFromJNI(
@@ -34,11 +40,13 @@ Java_com_quanshi_uc_fxplay_MainActivity_stringFromJNI(
 //    TestObs *tobs = new TestObs();
     IDemux *de = new FFDemux();
 //    de->AddObs(tobs);
-    de->Open("/sdcard/11.mp4");
+    de->Open("/sdcard/VID_181027.mp4");
 
+    XLOGI("start video decode");
     IDecode *vdecode = new FFDecode();
-    vdecode->Open(de->GetVPara());
+    vdecode->Open(de->GetVPara(), true);
 
+    XLOGI("start audio decode");
     IDecode *adecode = new FFDecode();
     adecode->Open(de->GetAPara());
     de->AddObs(vdecode);

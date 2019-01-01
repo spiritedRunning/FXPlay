@@ -47,6 +47,9 @@ void IPlayer::Close() {
     if (adecode) {
         adecode->Stop();
     }
+    if (audioPlay) {
+        audioPlay->Stop();
+    }
 
     // 2 清理缓冲队列
     if (vdecode) {

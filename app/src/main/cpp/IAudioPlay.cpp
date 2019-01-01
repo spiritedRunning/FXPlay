@@ -16,6 +16,8 @@ void IAudioPlay::Clear() {
 
 XData IAudioPlay::GetData() {
     XData d;
+
+    isRunning = true;
     while (!isExit) {
         framesMutex.lock();
         if (!frames.empty()) {
@@ -29,6 +31,7 @@ XData IAudioPlay::GetData() {
         XSleep(1);
     }
 
+    isRunning = false;
     // 未获取数据
     return d;
 }

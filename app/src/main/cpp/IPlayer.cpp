@@ -34,7 +34,53 @@ IPlayer *IPlayer::Get(unsigned char index) {
     return &p[index];
 }
 
+void IPlayer::Close() {
+    mux.lock();
+    // 1 关闭主题线程
+    XThread::Stop();
+    if (demux) {
+        demux->Stop();
+    }
+    if (vdecode) {
+        vdecode->Stop();
+    }
+    if (adecode) {
+        adecode->Stop();
+    }
+
+    // 2 清理缓冲队列
+    if (vdecode) {
+        vdecode->Clear();
+    }
+    if (adecode) {
+        adecode->Clear();
+    }
+    if (audioPlay) {
+        audioPlay->Clear();
+    }
+
+    // 3 清理资源
+    if (audioPlay) {
+        audioPlay->Close();
+    }
+    if (videoView) {
+        videoView->Close();
+    }
+    if (vdecode) {
+        vdecode->Close();
+    }
+    if (adecode) {
+        adecode->Close();
+    }
+    if (demux) {
+        demux->Close();
+    }
+
+    mux.unlock();
+}
+
 bool IPlayer::Open(const char *path) {
+    Close();
     mux.lock();
     if (!demux || !demux->Open(path)) {
         XLOGE("demux open %s failed", path);
@@ -62,12 +108,18 @@ bool IPlayer::Open(const char *path) {
 
 bool IPlayer::Start() {
     mux.lock();
+    // 这里注意线程的启动顺序!!
+    if (vdecode) {
+        vdecode->Start();
+    }
+
     if (!demux || !demux->Start()) {
         XLOGE("demux start failed");
         mux.unlock();
         return false;
     }
-    // 先启动音频，让音频先缓冲
+
+    // 可以先启动音频，让音频先缓冲
     if (adecode) {
         adecode->Start();
     }
@@ -75,9 +127,7 @@ bool IPlayer::Start() {
         audioPlay->StartPlay(outPara);
     }
 
-    if (vdecode) {
-        vdecode->Start();
-    }
+    // 启动同步线程
     XThread::Start();
 
     mux.unlock();

@@ -16,6 +16,7 @@ public:
     virtual void Draw() {
         mux.lock();
         if (display == EGL_NO_DISPLAY || surface == EGL_NO_SURFACE) {
+            mux.unlock();
             return;
         }
         eglSwapBuffers(display, surface);
@@ -90,12 +91,16 @@ public:
         };
         context = eglCreateContext(display, config, EGL_NO_CONTEXT, ctxAttr);
         if (context == EGL_NO_CONTEXT) {
+            mux.unlock();
             XLOGE("eglCreateContext failed");
+            return false;
         }
         XLOGI("eglCreateContext succ");
 
         if (EGL_TRUE != eglMakeCurrent(display, surface, surface, context)) {
+            mux.unlock();
             XLOGE("eglMakeCurrent failed");
+            return false;
         }
         XLOGI("eglMakeCurrent succ");
 

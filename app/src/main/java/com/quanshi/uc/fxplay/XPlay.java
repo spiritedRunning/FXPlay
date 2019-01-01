@@ -15,15 +15,15 @@ import javax.microedition.khronos.opengles.GL10;
 public class XPlay extends GLSurfaceView implements SurfaceHolder.Callback, GLSurfaceView.Renderer {
     public XPlay(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+        // android 8.0设置
+        setRenderer(this);
     }
 
 
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        // android 8.0设置
-        setRenderer(this);
-
         InitView(holder.getSurface());
     }
 

@@ -36,7 +36,7 @@ IPlayer *IPlayer::Get(unsigned char index) {
 
 void IPlayer::Close() {
     mux.lock();
-    // 1 关闭主题线程
+    // 1 关闭主体线程
     XThread::Stop();
     if (demux) {
         demux->Stop();
@@ -77,6 +77,7 @@ void IPlayer::Close() {
     }
 
     mux.unlock();
+
 }
 
 bool IPlayer::Open(const char *path) {
@@ -95,9 +96,9 @@ bool IPlayer::Open(const char *path) {
         XLOGE("adecode open %s failed", path);
     }
     // 解码后或解封后可能是直接能播放的数据，则不需要重采样
-    if (outPara.sample_rate <= 0) { // 如用户未配置，取默认参数
+//    if (outPara.sample_rate <= 0) { // 如用户未配置，取默认参数
         outPara = demux->GetAPara();
-    }
+//    }
     if (!resample || !resample->Open(demux->GetAPara(), outPara)) {
         XLOGE("resample open %s failed", path);
     }
@@ -114,8 +115,8 @@ bool IPlayer::Start() {
     }
 
     if (!demux || !demux->Start()) {
-        XLOGE("demux start failed");
         mux.unlock();
+        XLOGE("demux start failed");
         return false;
     }
 
@@ -136,6 +137,7 @@ bool IPlayer::Start() {
 
 void IPlayer::InitView(void *win) {
     if (videoView) {
+        videoView->Close();
         videoView->SetRender(win);
     }
 }

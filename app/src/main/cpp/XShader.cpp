@@ -16,7 +16,7 @@ static const char *vertexShader = GET_STR(
         }
 );
 
-// 片元着色器， 软解码和部分x86硬编码
+// 片元着色器， 软解码和部分x86硬解码
 static const char *fragYUV420P = GET_STR(
         precision mediump float;    // 精度
         varying vec2 vTexCoord;     // 顶点着色器传递的坐标
@@ -37,6 +37,7 @@ static const char *fragYUV420P = GET_STR(
         }
 );
 
+// 片元着色器， 软解码和部分x86硬解码
 static const char *fragNV12 = GET_STR(
         precision mediump float;    // 精度
         varying vec2 vTexCoord;     // 顶点着色器传递的坐标
@@ -56,6 +57,7 @@ static const char *fragNV12 = GET_STR(
         }
 );
 
+// 片元着色器， 软解码和部分x86硬解码
 static const char *fragNV21 = GET_STR(
         precision mediump float;    // 精度
         varying vec2 vTexCoord;     // 顶点着色器传递的坐标

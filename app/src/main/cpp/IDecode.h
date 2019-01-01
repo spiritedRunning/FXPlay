@@ -25,6 +25,9 @@ public:
 
     bool isAudio = false;
     int maxList = 100; // 假如每秒缓冲25帧， 大概缓冲时间4s
+    // 同步时间， 再次打开文件要清理
+    int synPts = 0;
+    int pts = 0;
 
 protected:
     virtual void Main();

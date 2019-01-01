@@ -8,14 +8,37 @@
 #include "IAudioPlay.h"
 #include "XLog.h"
 
+void IPlayer::Main() {
+    while (!isExit) {
+        mux.lock();
+
+        if (!audioPlay || !vdecode) {
+            mux.unlock();
+            XSleep(2);
+            continue;
+        }
+        // 获取音频pts, 告诉视频
+        int apts = audioPlay->pts;
+//        XLOGI("apts = %d", apts);
+        vdecode->synPts = apts;
+
+        mux.unlock();
+        XSleep(2);
+    }
+
+
+}
+
 IPlayer *IPlayer::Get(unsigned char index) {
     static IPlayer p[256];
     return &p[index];
 }
 
 bool IPlayer::Open(const char *path) {
+    mux.lock();
     if (!demux || !demux->Open(path)) {
         XLOGE("demux open %s failed", path);
+        mux.unlock();
         return false;
     }
     // 如果解封之后是原始数据，则不需要解码
@@ -33,12 +56,15 @@ bool IPlayer::Open(const char *path) {
         XLOGE("resample open %s failed", path);
     }
 
+    mux.unlock();
     return true;
 }
 
 bool IPlayer::Start() {
+    mux.lock();
     if (!demux || !demux->Start()) {
         XLOGE("demux start failed");
+        mux.unlock();
         return false;
     }
     // 先启动音频，让音频先缓冲
@@ -52,7 +78,9 @@ bool IPlayer::Start() {
     if (vdecode) {
         vdecode->Start();
     }
+    XThread::Start();
 
+    mux.unlock();
     return true;
 }
 

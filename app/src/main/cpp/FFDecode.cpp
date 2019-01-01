@@ -96,7 +96,7 @@ XData FFDecode::RecvFrame() {
 //        XLOGE("data format is %d", frame->format);
 //    }
 
-
+    d.pts = frame->pts;
     memcpy(d.datas, frame->data, sizeof(d.datas));
     return d;
 }

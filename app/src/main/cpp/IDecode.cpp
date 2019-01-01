@@ -28,6 +28,17 @@ void IDecode::Update(XData pkt) {
 void IDecode::Main() {
     while (!isExit) {
         packsMutex.lock();
+
+
+        // 判断音视频同步
+        if (!isAudio && synPts > 0) {
+            if (synPts < pts) { // 音频比视频慢
+                packsMutex.unlock();
+                XSleep(1);
+                continue;
+            }
+        }
+
         if (packs.empty()) {
             packsMutex.unlock();
             XSleep(1);
@@ -45,6 +56,7 @@ void IDecode::Main() {
                 if (!frame.data) {
                     break;
                 }
+                pts = frame.pts;
 //                XLOGE("RecvFrame %d", frame.size);
                 this->Notify(frame);
             }

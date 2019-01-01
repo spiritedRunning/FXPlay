@@ -5,6 +5,12 @@ extern "C" {
 #include <libavformat/avformat.h>
 }
 
+/**
+ * 分数转为浮点数, 方便计算
+ */
+static double r2d(AVRational r) {
+    return r.num == 0 || r.den == 0 ? 0. : (double)r.num/(double)r.den;
+}
 
 FFDemux::FFDemux() {
     static bool isFirst = true;
@@ -113,6 +119,13 @@ XData FFDemux::Read() {
         av_packet_free(&pkt);
         return XData();
     }
+
+    // 转换pts, 毫秒
+    pkt->pts = pkt->pts * (1000 * r2d(ic->streams[pkt->stream_index]->time_base));
+    pkt->dts = pkt->dts * (1000 * r2d(ic->streams[pkt->stream_index]->time_base));
+    d.pts = (int) pkt->pts;
+//    XLOGI("demux pts %d", d.pts);
+
     return d;
 }
 

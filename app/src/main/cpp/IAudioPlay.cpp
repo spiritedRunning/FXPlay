@@ -14,13 +14,14 @@ XData IAudioPlay::GetData() {
             d = frames.front();
             frames.pop_front();
             framesMutex.unlock();
+            pts = d.pts;
             return d;
         }
         framesMutex.unlock();
         XSleep(1);
     }
 
-
+    // 未获取数据
     return d;
 }
 

@@ -55,7 +55,8 @@ jint JNI_OnLoad(JavaVM *vm, void *res) {
     IPlayer::Get()->resample = resample;
     IPlayer::Get()->audioPlay = audioPlay;
 
-    IPlayer::Get()->Open("/sdcard/iloveyou.mp4");
+    IPlayer::Get()->Open("/sdcard/SUZHOU.mp4");
+    IPlayer::Get()->Start();
 
 //    de->Start();
 //    vdecode->Start();
@@ -82,7 +83,8 @@ extern "C"
 JNIEXPORT void JNICALL
 Java_com_quanshi_uc_fxplay_XPlay_InitView(JNIEnv *env, jobject instance, jobject surface) {
     ANativeWindow *win =  ANativeWindow_fromSurface(env, surface);
-    view->SetRender(win);
+    IPlayer::Get()->InitView(win);
+//    view->SetRender(win);
 //    XEGL::Get()->Init(win);
 //    XShader shader;
 //    shader.Init();

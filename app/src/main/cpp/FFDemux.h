@@ -12,6 +12,7 @@ public:
 
     // 打开文件，或流媒体  rtmp http rtsp
     virtual bool Open(const char *url);
+    virtual void Close();
     // 获取视频参数
     virtual XParameter GetVPara();
     // 获取音频参数
@@ -21,6 +22,7 @@ public:
 
 private:
     AVFormatContext *ic = 0;    // 只有在无参数构造参数时，赋值才生效
+    std::mutex mux;
     int audioStream = 1;
     int videoStream = 0;
 };

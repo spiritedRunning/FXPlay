@@ -80,6 +80,23 @@ void IPlayer::Close() {
 
 }
 
+double IPlayer::PlayPos() {
+    double pos = 0.0;
+    mux.lock();
+
+    int total = 0;
+    if (demux) {
+        total = demux->totalMs;
+    }
+    if (total > 0) {
+        if (vdecode) {
+            pos = (double)vdecode->pts / (double)total;
+        }
+    }
+    mux.unlock();
+    return pos;
+}
+
 bool IPlayer::Open(const char *path) {
     Close();
     mux.lock();

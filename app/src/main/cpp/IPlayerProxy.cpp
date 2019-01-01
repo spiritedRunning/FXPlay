@@ -21,6 +21,16 @@ void IPlayerProxy::Init(void *vm) {
     mux.unlock();
 }
 
+double IPlayerProxy::PlayPos() {
+    double pos = 0.0;
+    mux.lock();
+    if (player) {
+        pos = player->PlayPos();
+    }
+    mux.unlock();
+    return pos;
+}
+
 
 
 bool IPlayerProxy::Open(const char *path) {

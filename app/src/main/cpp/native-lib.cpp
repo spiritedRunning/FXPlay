@@ -34,3 +34,10 @@ Java_com_quanshi_uc_fxplay_OpenUrlActivity_Open(JNIEnv *env, jobject instance, j
     IPlayerProxy::Get()->Start();
     env->ReleaseStringUTFChars(url_, url);
 }
+
+extern "C"
+JNIEXPORT jdouble JNICALL
+Java_com_quanshi_uc_fxplay_MainActivity_PlayPos(JNIEnv *env, jobject instance) {
+    return IPlayerProxy::Get()->PlayPos();
+
+}

@@ -19,6 +19,9 @@ public:
     virtual bool Start();
     virtual void InitView(void *win);
 
+    // 获取当前播放进度 0.0~1.0
+    virtual double PlayPos();
+
 protected:
     IPlayerProxy(){}
     IPlayer *player = 0;

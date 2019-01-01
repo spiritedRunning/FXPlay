@@ -25,6 +25,7 @@ public:
 
     // 获取当前播放进度 0.0~1.0
     virtual double PlayPos();
+    virtual bool Seek(double pos);
 
     // 是否硬解码
     bool isHardDecode = true;

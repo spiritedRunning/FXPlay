@@ -26,6 +26,30 @@ FFDemux::FFDemux() {
     }
 }
 
+// seek位置 0.0~1.0
+bool FFDemux::Seek(double pos) {
+    if (pos < 0 || pos > 1) {
+        XLOGE("seek value must 0.0~1.0");
+        return false;
+    }
+
+    bool re = false;
+    mux.lock();
+    if (!ic) {
+        mux.unlock();
+        return false;
+    }
+    // 清空读取的缓冲
+    avformat_flush(ic);
+    long long seekPts = 0;
+    seekPts = ic->streams[videoStream]->duration * pos;
+    // 向后跳转到关键帧， 按时间顺序，实际是进度条左边
+    re = av_seek_frame(ic, videoStream, seekPts, AVSEEK_FLAG_FRAME | AVSEEK_FLAG_BACKWARD);
+
+    mux.unlock();
+    return re;
+}
+
 // 打开文件，或流媒体  rtmp http rtsp
 bool FFDemux::Open(const char *url) {
     XLOGI("Open file %s begin", url);

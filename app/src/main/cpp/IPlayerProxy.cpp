@@ -31,6 +31,15 @@ double IPlayerProxy::PlayPos() {
     return pos;
 }
 
+bool IPlayerProxy::Seek(double pos) {
+    bool re = false;
+    mux.lock();
+    if (player) {
+        re = player->Seek(pos);
+    }
+    mux.unlock();
+    return re;
+}
 
 
 bool IPlayerProxy::Open(const char *path) {

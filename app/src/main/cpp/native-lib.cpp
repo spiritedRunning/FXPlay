@@ -32,6 +32,7 @@ Java_com_quanshi_uc_fxplay_OpenUrlActivity_Open(JNIEnv *env, jobject instance, j
     XLOGI("start open file : %s", url);
     IPlayerProxy::Get()->Open(url);
     IPlayerProxy::Get()->Start();
+//    IPlayerProxy::Get()->Seek(0.5);
     env->ReleaseStringUTFChars(url_, url);
 }
 
@@ -39,5 +40,12 @@ extern "C"
 JNIEXPORT jdouble JNICALL
 Java_com_quanshi_uc_fxplay_MainActivity_PlayPos(JNIEnv *env, jobject instance) {
     return IPlayerProxy::Get()->PlayPos();
+
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_quanshi_uc_fxplay_MainActivity_Seek(JNIEnv *env, jobject instance, jdouble pos) {
+    IPlayerProxy::Get()->Seek(pos);
 
 }

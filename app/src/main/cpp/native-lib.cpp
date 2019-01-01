@@ -13,14 +13,9 @@
 #include "FFResample.h"
 #include "IAudioPlay.h"
 #include "SLAudioPlay.h"
+#include "IPlayer.h"
 
 
-class TestObs : public IObserver {
-public:
-    void Update(XData d) {
-//        XLOGI("TestObs update data size: %d ", d.size);
-    }
-};
 
 IVideoView *view = NULL;
 
@@ -30,18 +25,14 @@ jint JNI_OnLoad(JavaVM *vm, void *res) {
 
 
     // 测试代码
-    TestObs *tobs = new TestObs();
     IDemux *de = new FFDemux();
-//    de->AddObs(tobs);
-    de->Open("/sdcard/iloveyou.mp4");
+//    de->Open("/sdcard/iloveyou.mp4");
 
-    XLOGI("start video decode");
     IDecode *vdecode = new FFDecode();
-    vdecode->Open(de->GetVPara(), true);
+//    vdecode->Open(de->GetVPara(), true);
 
-    XLOGI("start audio decode");
     IDecode *adecode = new FFDecode();
-    adecode->Open(de->GetAPara());
+//    adecode->Open(de->GetAPara());
     de->AddObs(vdecode);
     de->AddObs(adecode);
 
@@ -49,17 +40,26 @@ jint JNI_OnLoad(JavaVM *vm, void *res) {
     vdecode->AddObs(view);
 
     IResample *resample = new FFResample();
-    XParameter outPara = de->GetAPara();
-    resample->Open(de->GetAPara(), outPara);
+//    XParameter outPara = de->GetAPara();
+//    resample->Open(de->GetAPara(), outPara);
     adecode->AddObs(resample);
 
     IAudioPlay *audioPlay = new SLAudioPlay();
-    audioPlay->StartPlay(outPara);
+//    audioPlay->StartPlay(outPara);
     resample->AddObs(audioPlay);
 
-    de->Start();
-    vdecode->Start();
-    adecode->Start();
+    IPlayer::Get()->demux = de;
+    IPlayer::Get()->adecode = adecode;
+    IPlayer::Get()->vdecode = vdecode;
+    IPlayer::Get()->videoView = view;
+    IPlayer::Get()->resample = resample;
+    IPlayer::Get()->audioPlay = audioPlay;
+
+    IPlayer::Get()->Open("/sdcard/iloveyou.mp4");
+
+//    de->Start();
+//    vdecode->Start();
+//    adecode->Start();
     return JNI_VERSION_1_4;
 }
 

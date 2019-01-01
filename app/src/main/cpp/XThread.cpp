@@ -17,10 +17,11 @@ void XThread::ThreadMain() {
     isRunning = false;
 }
 
-void XThread::Start() {
+bool XThread::Start() {
     isExit = false;
     thread th(&XThread::ThreadMain, this);
     th.detach();
+    return true;
 }
 
 void XThread::Stop() {

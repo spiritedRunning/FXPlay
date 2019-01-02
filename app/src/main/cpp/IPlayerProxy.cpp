@@ -21,6 +21,24 @@ void IPlayerProxy::Init(void *vm) {
     mux.unlock();
 }
 
+bool IPlayerProxy::IsPause() {
+    bool re = false;
+    mux.lock();
+    if (player) {
+        re = player->IsPause();
+    }
+    mux.unlock();
+    return re;
+}
+
+void IPlayerProxy::SetPause(bool isP) {
+    mux.lock();
+    if (player) {
+        player->SetPause(isP);
+    }
+    mux.unlock();
+}
+
 double IPlayerProxy::PlayPos() {
     double pos = 0.0;
     mux.lock();

@@ -49,3 +49,10 @@ Java_com_quanshi_uc_fxplay_MainActivity_Seek(JNIEnv *env, jobject instance, jdou
     IPlayerProxy::Get()->Seek(pos);
 
 }
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_quanshi_uc_fxplay_XPlay_PlayOrPause(JNIEnv *env, jobject instance) {
+
+    IPlayerProxy::Get()->SetPause(!IPlayerProxy::Get()->IsPause());
+}

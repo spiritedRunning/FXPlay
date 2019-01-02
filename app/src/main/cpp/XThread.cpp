@@ -17,8 +17,21 @@ void XThread::ThreadMain() {
     isRunning = false;
 }
 
+void XThread::SetPause(bool isP) {
+    isPause = isP;
+    for (int i = 0; i < 10; i++) {
+        if (isPausing == isPause) {
+            break;
+        }
+        XSleep(10);
+    }
+}
+
+
+
 bool XThread::Start() {
     isExit = false;
+    isPause = false;
     thread th(&XThread::ThreadMain, this);
     th.detach();
     return true;

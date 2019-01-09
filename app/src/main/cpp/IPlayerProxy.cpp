@@ -64,6 +64,7 @@ bool IPlayerProxy::Open(const char *path) {
     bool re = false;
     mux.lock();
     if (player) {
+        player->isHardDecode = isHardDecode;
         re = player->Open(path);
     }
     mux.unlock();

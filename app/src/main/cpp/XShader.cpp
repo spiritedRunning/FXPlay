@@ -137,6 +137,7 @@ bool XShader::Init(XShaderType type) {
     }
     XLOGI("InitShader GL_VERTEX_SHADER succ, type: %d", type);
 
+    // 片元shader 初始化
     switch (type) {
         case XSHADER_YUV420P:
             fsh = InitShader(fragYUV420P, GL_FRAGMENT_SHADER);
